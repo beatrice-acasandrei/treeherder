@@ -329,9 +329,7 @@ class IrrelevantDataRemoval(RemovalStrategy):
     `mozilla-beta` that are more than 6 months old.
     """
 
-    repositories = None
-    repositories_ids = []
-    repository_names = [
+    REPOSITORIES_NAMES = [
         'autoland',
         'mozilla-central',
         'mozilla-beta',
@@ -344,29 +342,29 @@ class IrrelevantDataRemoval(RemovalStrategy):
         self._chunk_size = chunk_size
         self._max_timestamp = datetime.now() - self._cycle_interval
         self._manager = PerformanceDatum.objects
+        self.__repositories = None
 
     @property
-    def relevant_repositories(self):
-        if self.repositories is None:
-            self.repositories = Repository.objects.filter(name__in=self.repository_names).values(
-                'id'
-            )
-            if self.repositories.count() != len(self.repository_names):
+    def __repositories_ids(self):
+        if self.__repositories is None:
+            self.__repositories = Repository.objects.filter(
+                name__in=self.REPOSITORIES_NAMES
+            ).values('id')
+            if self.__repositories.count() != len(self.REPOSITORIES_NAMES):
                 logger.warning("Failed to find all relevant repositories in the database")
-        return self.repositories
+
+        repos_ids = []
+        for repository in self.__repositories:
+            repos_ids.append(repository['id'])
+
+        return repos_ids
 
     @property
     def name(self) -> str:
         return 'irrelevant data removal strategy'
 
     def remove(self, using: CursorWrapper):
-        """
-        @type using: database connection cursor
-        """
         chunk_size = self._find_ideal_chunk_size()
-
-        for repository in self.relevant_repositories:
-            self.repositories_ids.append(repository['id'])
 
         using.execute(
             '''
@@ -375,7 +373,7 @@ class IrrelevantDataRemoval(RemovalStrategy):
                 LIMIT %s
             ''',
             [
-                tuple(self.repositories_ids),
+                tuple(self.__repositories_ids),
                 self._max_timestamp,
                 chunk_size,
             ],
@@ -384,18 +382,18 @@ class IrrelevantDataRemoval(RemovalStrategy):
     def _find_ideal_chunk_size(self) -> int:
         max_id_of_non_expired_row = (
             self._manager.filter(push_timestamp__gt=self._max_timestamp)
-            .exclude(repository_id__in=self.relevant_repositories)
+            .exclude(repository_id__in=self.__repositories_ids)
             .order_by('-id')[0]
             .id
         )
-        older_ids = (
+        older_perf_data_rows = (
             self._manager.filter(
                 push_timestamp__lte=self._max_timestamp, id__lte=max_id_of_non_expired_row
             )
-            .exclude(repository_id__in=self.relevant_repositories)
+            .exclude(repository_id__in=self.__repositories_ids)
             .order_by('id')[: self._chunk_size]
         )
-        return len(older_ids) or self._chunk_size
+        return len(older_perf_data_rows) or self._chunk_size
 
 
 class Command(BaseCommand):
