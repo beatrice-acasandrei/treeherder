@@ -1009,6 +1009,12 @@ class PerfCompareResults(generics.ListAPIView):
         name = '{} {} {}'.format(test_suite, option_name, extra_options)
         return name
 
+    @staticmethod
+    def _is_improvement(lower_is_better, base_avg_value, new_avg_value):
+        delta = new_avg_value - base_avg_value
+        new_is_better = (lower_is_better and delta < 0) or (not lower_is_better and delta > 0)
+        return True if new_is_better else False
+
 
 class TestSuiteHealthViewSet(viewsets.ViewSet):
     def list(self, request):
