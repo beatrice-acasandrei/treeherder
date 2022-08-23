@@ -757,6 +757,7 @@ class PerfCompareResults(generics.ListAPIView):
         if not query_params.is_valid():
             return Response(data=query_params.errors, status=HTTP_400_BAD_REQUEST)
 
+        startday = query_params.validated_data['startday']
         base_revision = query_params.validated_data['base_revision']
         new_revision = query_params.validated_data['new_revision']
         base_repo_name = query_params.validated_data['base_repository']
@@ -765,9 +766,10 @@ class PerfCompareResults(generics.ListAPIView):
         framework = query_params.validated_data['framework']
         no_subtests = query_params.validated_data['no_subtests']
 
+        startday = 1
         base_signatures = self._get_signatures(base_repo_name, framework, interval, no_subtests)
         new_signatures = self._get_signatures(new_repo_name, framework, interval, no_subtests)
-
+        startday += 1
         base_perf_data = self._get_perf_data(
             base_repo_name, base_revision, base_signatures, interval
         )
