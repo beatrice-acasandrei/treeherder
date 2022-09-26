@@ -300,7 +300,7 @@ export default class StatusDropdown extends React.Component {
       return 'Overdue';
     }
 
-    if (differenceInDays >= 4) {
+    if (differenceInDays >= 5) {
       return `Working days left: ${differenceInDays - 2}`;
     }
 
