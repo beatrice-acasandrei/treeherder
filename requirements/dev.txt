@@ -447,9 +447,9 @@ requests==2.32.3 \
     #   -r requirements/dev.in
     #   betamax
     #   responses
-responses==0.25.3 \
-    --hash=sha256:521efcbc82081ab8daa588e08f7e8a64ce79b91c39f6e62199b19159bea7dbcb \
-    --hash=sha256:617b9247abd9ae28313d57a75880422d55ec63c29d33d629697590a034358dba
+responses==0.25.5 \
+    --hash=sha256:b3e1ae252f69301b84146ff615a869a4182fbe17e8b606f1ac54142515dad5eb \
+    --hash=sha256:e53991613f76d17ba293c1e3cce8af107c5c7a6a513edf25195aafd89a870dd3
     # via -r requirements/dev.in
 selenium==4.17.2 \
     --hash=sha256:5aee79026c07985dc1b0c909f34084aa996dfe5b307602de9016d7a621a473f2 \
