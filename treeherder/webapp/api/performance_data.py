@@ -919,6 +919,7 @@ class PerfCompareResults(generics.ListAPIView):
         no_subtests = query_params.validated_data["no_subtests"]
         base_parent_signature = query_params.validated_data["base_parent_signature"]
         new_parent_signature = query_params.validated_data["new_parent_signature"]
+        replicates = query_params.validated_data["replicates"]
 
         try:
             new_push = models.Push.objects.get(revision=new_rev, repository__name=new_repo_name)
@@ -1020,6 +1021,9 @@ class PerfCompareResults(generics.ListAPIView):
                 new_perf_data_values = new_grouped_values.get(new_sig_id, [])
                 base_perf_data_replicates = base_grouped_replicates.get(base_sig_id, [])
                 new_perf_data_replicates = new_grouped_replicates.get(new_sig_id, [])
+                if replicates:
+                    base_perf_data_values = base_perf_data_values + base_perf_data_replicates
+                    new_perf_data_values = new_perf_data_values + new_perf_data_replicates
                 base_runs_count = len(base_perf_data_values)
                 new_runs_count = len(new_perf_data_values)
                 is_complete = base_runs_count and new_runs_count
