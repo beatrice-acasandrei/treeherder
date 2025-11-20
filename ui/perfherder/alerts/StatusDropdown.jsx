@@ -12,7 +12,12 @@ import {
 } from '../perf-helpers/helpers';
 import { create, getData } from '../../helpers/http';
 import TextualSummary from '../perf-helpers/textualSummary';
-import { bugzillaBugsApi, bzBaseUrl, getApiUrl } from '../../helpers/url';
+import {
+  bugzillaBugsApi,
+  bzBaseUrl,
+  getApiUrl,
+  getPerfCompareBaseURL,
+} from '../../helpers/url';
 import { criticalTestsList, summaryStatusMap } from '../perf-helpers/constants';
 import DropdownMenuItems from '../../shared/DropdownMenuItems';
 import BrowsertimeAlertsExtraData from '../../models/browsertimeAlertsExtraData';
@@ -169,7 +174,14 @@ export default class StatusDropdown extends React.Component {
     };
   };
 
-  getTemplateArgs(frameworks, alertSummary, repoModel, textualSummary, user) {
+  getTemplateArgs(
+    frameworks,
+    alertSummary,
+    repoModel,
+    textualSummary,
+    user,
+    perfCompareURL,
+  ) {
     const frameworkName = getFrameworkName(frameworks, alertSummary.framework);
     return {
       bugType: 'defect',
@@ -180,6 +192,7 @@ export default class StatusDropdown extends React.Component {
       alertSummary: textualSummary.markdown,
       alertSummaryId: alertSummary.id,
       user: user.email,
+      perfCompareURL,
     };
   }
 
@@ -193,11 +206,25 @@ export default class StatusDropdown extends React.Component {
       user,
     } = this.props;
 
+    const perfCompareURL = getPerfCompareBaseURL(
+      alertSummary.repository,
+      alertSummary.prev_push_revision,
+      alertSummary.repository,
+      alertSummary.revision,
+      alertSummary.framework,
+    );
+
     const { browsertimeAlertsExtraData } = this.state;
     const result = await this.getBugTemplate(
       alertSummary.framework,
       updateViewState,
     );
+
+    console.log(alertSummary);
+    const { alerts } = alertSummary;
+    const { series_signature: seriesSignature } = alerts[0];
+    const { measurement_unit: measurementUnit } = seriesSignature;
+    console.log(measurementUnit);
 
     const textualSummary = new TextualSummary(
       frameworks,
@@ -212,6 +239,7 @@ export default class StatusDropdown extends React.Component {
       repoModel,
       textualSummary,
       user,
+      perfCompareURL,
     );
 
     let templateText;
