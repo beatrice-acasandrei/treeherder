@@ -543,16 +543,16 @@ typing-extensions==4.15.0 \
     --hash=sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548
     # via selenium
 urllib3[socks]==2.6.3 \
-    --hash=sha256:bf272323e553dfb2e87d9bfd225ca7b0f467b919d7bbd355436d3fd37cb0acd4 \
-    --hash=sha256:1b62b6884944a57dbe321509ab94fd4d3b307075e0c2eae991ac71ee15ad38ed
+    --hash=sha256:1b62b6884944a57dbe321509ab94fd4d3b307075e0c2eae991ac71ee15ad38ed \
+    --hash=sha256:bf272323e553dfb2e87d9bfd225ca7b0f467b919d7bbd355436d3fd37cb0acd4
     # via
     #   -r requirements/dev.in
     #   requests
     #   responses
     #   selenium
-vcrpy==8.3.0 \
-    --hash=sha256:46d64e77e8d95e5c76c7d9a94ff05d8b38b2ae4e1d4869eb0235024b6fcb5212 \
-    --hash=sha256:bd66e6143746778157f00e2a922527a8d96b2fdc350be8988a45a29c843815b9
+vcrpy==9.1.0 \
+    --hash=sha256:a08517ef091d7add52ec4841922dcda27db7a3134dedef8c867aa83fb46f2d4e \
+    --hash=sha256:afd9d2c03982d9400e1f6a55f1d6a5947a9a6c578f7abc0ba2e3f4067729bdcc
     # via -r requirements/dev.in
 virtualenv==20.29.2 \
     --hash=sha256:fdaabebf6d03b5ba83ae0a02cfe96f48a716f4fae556461d180825866f75b728 \
