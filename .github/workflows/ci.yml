@@ -91,7 +91,7 @@ jobs:
             tox.ini
             requirements/*.txt
       # pre-commit's biome hook needs node; setup-node without pnpm is enough.
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: package.json
       - run: pip install tox
